@@ -1,51 +1,55 @@
 import Head from 'next/head'
+import { useState, useEffect } from 'react'
+import useSWR from 'swr'
+
+const fetcher = (...args) => fetch(...args).then(res => res.json())
 
 export default function Home() {
+  const [answer, setAnswer] = useState()
+  const [score, setScore] = useState(0)
+  const [current, setCurrent] = useState(0)
+  const {data, error} = useSWR('https://restcountries.eu/rest/v2/all?fields=name;flag', fetcher, {revalidateOnFocus:false})  
+  
+  useEffect(() => {
+    if(answer && answer.toLowerCase() === data[current].name.toLowerCase())
+    {
+      setScore(score + 1)
+      setAnswer("")
+      data.splice(current, 1)
+    }
+  }, [answer])
+
+  useEffect(() => {
+    data && setCurrent(Math.floor(Math.random() * data.length))
+  }, [score])
+
+
+  if (error) return <div>failed to load</div>
+  if (!data) return <div>loading...</div>
+
   return (
     <div className="container">
       <Head>
-        <title>Create Next App</title>
+        <title>Eeyan's Flag Quiz</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
       <main>
         <h1 className="title">
-          Welcome to <a href="https://nextjs.org">Next.js!</a>
+          Welcome to my exciting flag quiz!
         </h1>
 
-        <p className="description">
-          Get started by editing <code>pages/index.js</code>
-        </p>
+        {/* <h2>
+          Current: {current} Length: {data.length}
+        </h2> */}
 
-        <div className="grid">
-          <a href="https://nextjs.org/docs" className="card">
-            <h3>Documentation &rarr;</h3>
-            <p>Find in-depth information about Next.js features and API.</p>
-          </a>
+        <h2>
+          Score: {score}
+        </h2>
+        {/* <p>{data[current].name}</p> */}
+        <img style={{maxWidth: "400px"}} src={data[current].flag} />
 
-          <a href="https://nextjs.org/learn" className="card">
-            <h3>Learn &rarr;</h3>
-            <p>Learn about Next.js in an interactive course with quizzes!</p>
-          </a>
-
-          <a
-            href="https://github.com/vercel/next.js/tree/master/examples"
-            className="card"
-          >
-            <h3>Examples &rarr;</h3>
-            <p>Discover and deploy boilerplate example Next.js projects.</p>
-          </a>
-
-          <a
-            href="https://vercel.com/import?filter=next.js&utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className="card"
-          >
-            <h3>Deploy &rarr;</h3>
-            <p>
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
-        </div>
+        <input  value={answer} onChange={event => setAnswer(event.target.value)} />
       </main>
 
       <footer>
@@ -76,6 +80,15 @@ export default function Home() {
           flex-direction: column;
           justify-content: center;
           align-items: center;
+        }
+
+        main > img {
+          margin-top: 30px;
+        }
+
+        main > input {
+          margin-top: 30px;
+          text-align: center;
         }
 
         footer {
