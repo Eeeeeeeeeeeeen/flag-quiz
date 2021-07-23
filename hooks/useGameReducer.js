@@ -72,6 +72,7 @@ export default function useGameReducer() {
           correct: [],
           skipped: [],
           score: 0,
+          answer: ""
         };
       }
       case "END_GAME": {

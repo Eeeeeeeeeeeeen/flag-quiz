@@ -7,13 +7,14 @@ export default function Game({ data }) {
 
   const { gameState, answer, score, countryList, correct, skipped } = state;
 
+  //TODO: Fix this, it's not very efficient
   useEffect(() => {
-    console.log("yo");
     if (countryList.length === 0 && !firstLoad) {
       dispatch({ type: "END_GAME" });
     }
-    setFirstLoad(false);
-  }, [score, skipped]);
+    if(firstLoad)
+      setFirstLoad(false);
+  }, [score, JSON.stringify(countryList)]);
 
   return (
     <>
@@ -32,9 +33,6 @@ export default function Game({ data }) {
       {gameState === "STARTED" && countryList.length > 0 && (
         <>
           <h1 className="title">Welcome to my exciting flag quiz!</h1>
-          <h2>{countryList.length}</h2>
-          <h2>{correct.length}</h2>
-          <h2>skipped: {skipped.length}</h2>
           <h2>Score: {score}</h2>
           <img style={{ maxWidth: "400px" }} src={countryList[0].flag} />
 
@@ -46,9 +44,6 @@ export default function Game({ data }) {
             onKeyPress={(e) => {
               if (e.key === "Enter") {
                 dispatch({ type: "SUBMIT_ANSWER", country: e.target.value });
-              }
-              if (e.key === "1") {
-                dispatch({ type: "SKIP_COUNTRY" });
               }
             }}
           />
