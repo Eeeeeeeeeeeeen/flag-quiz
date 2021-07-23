@@ -1,34 +1,77 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import useGameReducer from "../hooks/useGameReducer";
 
 export default function Game({ data }) {
   const [state, dispatch] = useGameReducer();
+  const [firstLoad, setFirstLoad] = useState(true);
 
-  const { answer, score, currentCountry } = state;
+  const { gameState, answer, score, countryList, correct, skipped } = state;
 
   useEffect(() => {
-    dispatch({ type: "INIT_GAME", countries: data });
-  }, []);
+    console.log("yo");
+    if (countryList.length === 0 && !firstLoad) {
+      dispatch({ type: "END_GAME" });
+    }
+    setFirstLoad(false);
+  }, [score, skipped]);
 
   return (
     <>
-      <h1 className="title">Welcome to my exciting flag quiz!</h1>
-      <h2>Score: {score}</h2>
-      <img style={{ maxWidth: "400px" }} src={currentCountry.flag} />
+      {gameState === "NOT_STARTED" && (
+        <>
+          <h1 className="title">Welcome to my exciting flag quiz!</h1>
 
-      <input
-        value={answer}
-        onChange={(e) =>
-          dispatch({ type: "TYPE_ANSWER", answer: e.target.value })
-        }
-        onKeyPress={(e) => {
-          if (e.key === "Enter") {
-            dispatch({ type: "SUBMIT_ANSWER", country: e.target.value });
-          }
-        }}
-      />
+          <button
+            onClick={() => dispatch({ type: "INIT_GAME", countries: data })}
+          >
+            START
+          </button>
+        </>
+      )}
 
-      <button onClick={() => dispatch({ type: "SKIP_COUNTRY" })}>Skip</button>
+      {gameState === "STARTED" && countryList.length > 0 && (
+        <>
+          <h1 className="title">Welcome to my exciting flag quiz!</h1>
+          <h2>{countryList.length}</h2>
+          <h2>{correct.length}</h2>
+          <h2>skipped: {skipped.length}</h2>
+          <h2>Score: {score}</h2>
+          <img style={{ maxWidth: "400px" }} src={countryList[0].flag} />
+
+          <input
+            value={answer}
+            onChange={(e) =>
+              dispatch({ type: "TYPE_ANSWER", answer: e.target.value })
+            }
+            onKeyPress={(e) => {
+              if (e.key === "Enter") {
+                dispatch({ type: "SUBMIT_ANSWER", country: e.target.value });
+              }
+              if (e.key === "1") {
+                dispatch({ type: "SKIP_COUNTRY" });
+              }
+            }}
+          />
+
+          <button onClick={() => dispatch({ type: "SKIP_COUNTRY" })}>
+            Skip
+          </button>
+          <button onClick={() => dispatch({ type: "END_GAME" })}>
+            Give Up!
+          </button>
+        </>
+      )}
+
+      {gameState === "FINISHED" && (
+        <>
+          <h1 className="title">Thanks for playing my exciting flag quiz!</h1>
+          <h2>You scored {score}!</h2>
+          <button onClick={() => dispatch({ type: "RESTART" })}>
+            RETURN TO MAIN MENU
+          </button>
+        </>
+      )}
+
       <style jsx>{`
         input {
           margin-top: 30px;
