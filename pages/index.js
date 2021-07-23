@@ -6,7 +6,7 @@ const fetcher = (...args) => fetch(...args).then((res) => res.json());
 
 export default function Home() {
   const { data, error } = useSWR(
-    "https://restcountries.eu/rest/v2/all?fields=name;flag;altSpellings",
+    "Countries.json",
     fetcher,
     { revalidateOnFocus: false }
   );

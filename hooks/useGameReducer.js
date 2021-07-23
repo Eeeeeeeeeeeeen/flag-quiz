@@ -55,6 +55,7 @@ export default function useGameReducer() {
           ...state,
           countryList: newArray,
           skipped: newSkipped,
+          answer: ""
         };
       }
       case "INIT_GAME": {

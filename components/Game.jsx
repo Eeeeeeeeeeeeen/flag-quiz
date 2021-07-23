@@ -21,7 +21,7 @@ export default function Game({ data }) {
       {gameState === "NOT_STARTED" && (
         <>
           <h1 className="title">Welcome to my exciting flag quiz!</h1>
-
+          <h3>There are 196 flags in this quiz, this might take a while!</h3>
           <button
             onClick={() => dispatch({ type: "INIT_GAME", countries: data })}
           >
@@ -51,9 +51,9 @@ export default function Game({ data }) {
           <button onClick={() => dispatch({ type: "SKIP_COUNTRY" })}>
             Skip
           </button>
-          <button onClick={() => dispatch({ type: "END_GAME" })}>
+          <a href="#" onClick={() => dispatch({ type: "END_GAME" })}>
             Give Up!
-          </button>
+          </a>
         </>
       )}
 
@@ -80,6 +80,10 @@ export default function Game({ data }) {
           border-radius: 10px;
         }
 
+        a {
+          margin-top: 10px;
+        }
+
         button {
           margin-top: 10px;
           padding: 1.25rem 2.5rem;
@@ -96,6 +100,7 @@ export default function Game({ data }) {
           border-color: #f6b93b;
           transition: all 0.2s ease 0s;
         }
+
       `}</style>
     </>
   );
