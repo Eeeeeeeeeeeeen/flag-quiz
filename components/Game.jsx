@@ -1,3 +1,4 @@
+import { Button, Center, Flex, Heading, Spacer, Text, Image, Input, HStack } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import useGameReducer from "../hooks/useGameReducer";
 
@@ -12,96 +13,85 @@ export default function Game({ data }) {
     if (countryList.length === 0 && !firstLoad) {
       dispatch({ type: "END_GAME" });
     }
-    if(firstLoad)
+    if (firstLoad)
       setFirstLoad(false);
   }, [score, JSON.stringify(countryList)]);
+
+  function getProgress() {
+    const current = correct.length + skipped.length + 1;
+
+    return <Text fontSize="lg" fontWeight="bold">You're on {current} / {data.length}</Text>
+  }
 
   return (
     <>
       {gameState === "NOT_STARTED" && (
         <>
-          <h1 className="title">Welcome to my exciting flag quiz!</h1>
-          <h3>There are 196 flags in this quiz, this might take a while!</h3>
-          <button
-            onClick={() => dispatch({ type: "INIT_GAME", countries: data })}
-          >
-            START
-          </button>
+          <Heading as="h1" size="2xl">Eeyan's Flag Quiz!</Heading>
+          <Heading as="h2" size="md">There are 196 flags in this quiz, this might take a while!</Heading>
+          <Center>
+            <Button
+              colorScheme="pink"
+              size="lg"
+              onClick={() => dispatch({ type: "INIT_GAME", countries: data })}
+            >
+              START
+            </Button>
+          </Center>
+
         </>
       )}
 
       {gameState === "STARTED" && countryList.length > 0 && (
         <>
-          <h1 className="title">Welcome to my exciting flag quiz!</h1>
-          <h2>Score: {score}</h2>
-          <img style={{ maxWidth: "400px" }} src={countryList[0].flag} />
+          <Flex>
+            {getProgress()}
+            <Spacer />
+            <Text fontSize="lg" fontWeight="bold">Score: {score}</Text>
+          </Flex>
 
-          <input
-            value={answer}
-            onChange={(e) =>
-              dispatch({ type: "TYPE_ANSWER", answer: e.target.value })
-            }
-            onKeyPress={(e) => {
-              if (e.key === "Enter") {
-                dispatch({ type: "SUBMIT_ANSWER", country: e.target.value });
+          <Image border="black solid 5px" borderRadius="xl" src={countryList[0].flag} w="500px" />
+
+          <Center>
+            <Input
+              textAlign="center"
+              fontWeight="bold"
+              width="200px"
+              value={answer}
+              onChange={(e) =>
+                dispatch({ type: "TYPE_ANSWER", answer: e.target.value })
               }
-            }}
-          />
+              onKeyPress={(e) => {
+                if (e.key === "Enter") {
+                  dispatch({ type: "SUBMIT_ANSWER", country: e.target.value });
+                }
+              }}
+            />
+          </Center>
 
-          <button onClick={() => dispatch({ type: "SKIP_COUNTRY" })}>
-            Skip
-          </button>
-          <a href="#" onClick={() => dispatch({ type: "END_GAME" })}>
-            Give Up!
-          </a>
+          <HStack spacing="15px" justifyContent="center" fontSize="xl">
+            <Button size="lg" colorScheme="pink" onClick={() => dispatch({ type: "SKIP_COUNTRY" })}>
+              Skip
+            </Button>
+            <Button colorScheme="red" onClick={() => dispatch({ type: "END_GAME" })} variant="ghost">
+              Give Up!
+            </Button>
+          </HStack>
         </>
-      )}
+      )
+      }
 
-      {gameState === "FINISHED" && (
-        <>
-          <h1 className="title">Thanks for playing my exciting flag quiz!</h1>
-          <h2>You scored {score}!</h2>
-          <button onClick={() => dispatch({ type: "RESTART" })}>
-            RETURN TO MAIN MENU
-          </button>
-        </>
-      )}
-
-      <style jsx>{`
-        input {
-          margin-top: 30px;
-          text-align: center;
-          font-size: 1.5rem;
-        }
-
-        img {
-          maxwidth: 400px;
-          border: 3px solid #000;
-          border-radius: 10px;
-        }
-
-        a {
-          margin-top: 10px;
-        }
-
-        button {
-          margin-top: 10px;
-          padding: 1.25rem 2.5rem;
-          font-size: 1.5rem;
-          border: 4px solid #494949;
-          color: #494949;
-          background: white;
-          text-transform: uppercase;
-        }
-
-        button:hover {
-          color: #ffffff;
-          background: #f6b93b;
-          border-color: #f6b93b;
-          transition: all 0.2s ease 0s;
-        }
-
-      `}</style>
+      {
+        gameState === "FINISHED" && (
+          <>
+            <Heading as="h1" size="2xl">Thanks for playing!</Heading>
+            <Heading as="h2" size="xl">You scored {score}!</Heading>
+            <Button size="lg" colorScheme="pink" onClick={() => dispatch({ type: "RESTART" })}>
+              Try again?
+            </Button>
+          </>
+        )
+      }
     </>
   );
 }
