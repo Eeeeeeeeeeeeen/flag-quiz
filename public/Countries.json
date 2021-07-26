@@ -42,8 +42,7 @@
     {
         "flag": "https://restcountries.eu/data/atg.svg",
         "name": "Antigua and Barbuda",
-        "altSpellings": [
-        ]
+        "altSpellings": []
     },
     {
         "flag": "https://restcountries.eu/data/arg.svg",
@@ -65,8 +64,7 @@
     {
         "flag": "https://restcountries.eu/data/aus.svg",
         "name": "Australia",
-        "altSpellings": [
-        ]
+        "altSpellings": []
     },
     {
         "flag": "https://restcountries.eu/data/aut.svg",
@@ -111,8 +109,7 @@
     {
         "flag": "https://restcountries.eu/data/brb.svg",
         "name": "Barbados",
-        "altSpellings": [
-        ]
+        "altSpellings": []
     },
     {
         "flag": "https://restcountries.eu/data/blr.svg",
@@ -143,8 +140,7 @@
     {
         "flag": "https://restcountries.eu/data/blz.svg",
         "name": "Belize",
-        "altSpellings": [
-        ]
+        "altSpellings": []
     },
     {
         "flag": "https://restcountries.eu/data/ben.svg",
@@ -221,8 +217,7 @@
     {
         "flag": "https://restcountries.eu/data/bfa.svg",
         "name": "Burkina Faso",
-        "altSpellings": [
-        ]
+        "altSpellings": []
     },
     {
         "flag": "https://restcountries.eu/data/bdi.svg",
@@ -416,8 +411,7 @@
     {
         "flag": "https://restcountries.eu/data/dom.svg",
         "name": "Dominican Republic",
-        "altSpellings": [
-        ]
+        "altSpellings": []
     },
     {
         "flag": "https://restcountries.eu/data/ecu.svg",
@@ -545,8 +539,7 @@
     {
         "flag": "https://restcountries.eu/data/gha.svg",
         "name": "Ghana",
-        "altSpellings": [
-        ]
+        "altSpellings": []
     },
     {
         "flag": "https://restcountries.eu/data/grc.svg",
@@ -560,14 +553,12 @@
     {
         "flag": "https://restcountries.eu/data/grd.svg",
         "name": "Grenada",
-        "altSpellings": [
-        ]
+        "altSpellings": []
     },
     {
         "flag": "https://restcountries.eu/data/gtm.svg",
         "name": "Guatemala",
-        "altSpellings": [
-        ]
+        "altSpellings": []
     },
     {
         "flag": "https://restcountries.eu/data/gin.svg",
@@ -622,8 +613,7 @@
     {
         "flag": "https://restcountries.eu/data/hun.svg",
         "name": "Hungary",
-        "altSpellings": [
-        ]
+        "altSpellings": []
     },
     {
         "flag": "https://restcountries.eu/data/isl.svg",
@@ -707,8 +697,7 @@
     {
         "flag": "https://restcountries.eu/data/jam.svg",
         "name": "Jamaica",
-        "altSpellings": [
-        ]
+        "altSpellings": []
     },
     {
         "flag": "https://restcountries.eu/data/jpn.svg",
@@ -855,6 +844,7 @@
             "North Macedonia",
             "Republic of North Macedonia",
             "Republic of Macedonia",
+            "Macedonia",
             "Република Македонија"
         ]
     },
@@ -877,8 +867,7 @@
     {
         "flag": "https://restcountries.eu/data/mys.svg",
         "name": "Malaysia",
-        "altSpellings": [
-        ]
+        "altSpellings": []
     },
     {
         "flag": "https://restcountries.eu/data/mdv.svg",
@@ -967,8 +956,7 @@
     {
         "flag": "https://restcountries.eu/data/mng.svg",
         "name": "Mongolia",
-        "altSpellings": [
-        ]
+        "altSpellings": []
     },
     {
         "flag": "https://restcountries.eu/data/mne.svg",
@@ -1347,8 +1335,7 @@
     {
         "flag": "https://restcountries.eu/data/slb.svg",
         "name": "Solomon Islands",
-        "altSpellings": [
-        ]
+        "altSpellings": []
     },
     {
         "flag": "https://restcountries.eu/data/som.svg",
@@ -1381,8 +1368,7 @@
     {
         "flag": "https://restcountries.eu/data/ssd.svg",
         "name": "South Sudan",
-        "altSpellings": [
-        ]
+        "altSpellings": []
     },
     {
         "flag": "https://restcountries.eu/data/esp.svg",
@@ -1511,8 +1497,7 @@
     {
         "flag": "https://restcountries.eu/data/ton.svg",
         "name": "Tonga",
-        "altSpellings": [
-        ]
+        "altSpellings": []
     },
     {
         "flag": "https://restcountries.eu/data/tto.svg",
@@ -1541,14 +1526,12 @@
     {
         "flag": "https://restcountries.eu/data/tkm.svg",
         "name": "Turkmenistan",
-        "altSpellings": [
-        ]
+        "altSpellings": []
     },
     {
         "flag": "https://restcountries.eu/data/tuv.svg",
         "name": "Tuvalu",
-        "altSpellings": [
-        ]
+        "altSpellings": []
     },
     {
         "flag": "https://restcountries.eu/data/uga.svg",

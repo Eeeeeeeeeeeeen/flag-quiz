@@ -23,7 +23,7 @@ export default function Home() {
 
       <main>
         <Center h="100vh">
-          <Stack spacing="6" maxWidth="1024px" textAlign="center">
+          <Stack spacing="6" maxWidth="1024px" textAlign="center" m="0 10px">
             <Game data={data} />
           </Stack>
         </Center>

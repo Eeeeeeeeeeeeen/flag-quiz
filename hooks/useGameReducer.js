@@ -9,24 +9,24 @@ export default function useGameReducer() {
     skipped: [],
     gameState: "NOT_STARTED",
     score: 0,
+    gameLength: 0
   };
 
   let [state, dispatch] = useReducer((state, action) => {
-    console.log(action.type);
     switch (action.type) {
       case "SUBMIT_ANSWER": {
         let newScore = state.score;
 
         if (
           action.country.toLowerCase() ===
-            state.countryList[0].name.toLowerCase() ||
+          state.countryList[0].name.toLowerCase() ||
           state.countryList[0].altSpellings.findIndex(
             (c) => c.toLowerCase() === action.country.toLowerCase()
           ) !== -1
         ) {
           newScore += 1;
 
-          const newArray = state.countryList;
+          const newArray = [...state.countryList];
           const c = newArray.splice(0, 1);
           state.correct.push(c);
 
@@ -46,9 +46,10 @@ export default function useGameReducer() {
         return { ...state, answer: action.answer };
       }
       case "SKIP_COUNTRY": {
-        const newArray = state.countryList;
-        const newSkipped = state.skipped;
+        const newArray = [...state.countryList];
         const c = newArray.splice(0, 1);
+
+        const newSkipped = [...state.skipped];
         newSkipped.push(c);
 
         return {
@@ -73,7 +74,8 @@ export default function useGameReducer() {
           correct: [],
           skipped: [],
           score: 0,
-          answer: ""
+          answer: "",
+          gameLength: action.gameLength ? action.gameLength : action.countries.length
         };
       }
       case "END_GAME": {

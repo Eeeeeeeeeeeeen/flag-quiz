@@ -6,11 +6,11 @@ export default function Game({ data }) {
   const [state, dispatch] = useGameReducer();
   const [firstLoad, setFirstLoad] = useState(true);
 
-  const { gameState, answer, score, countryList, correct, skipped } = state;
+  const { gameState, answer, score, countryList, correct, skipped, gameLength } = state;
 
   //TODO: Fix this, it's not very efficient
   useEffect(() => {
-    if (countryList.length === 0 && !firstLoad) {
+    if (correct.length + skipped.length === gameLength && !firstLoad) {
       dispatch({ type: "END_GAME" });
     }
     if (firstLoad)
@@ -20,7 +20,7 @@ export default function Game({ data }) {
   function getProgress() {
     const current = correct.length + skipped.length + 1;
 
-    return <Text fontSize="lg" fontWeight="bold">You're on {current} / {data.length}</Text>
+    return <Text fontSize="lg" fontWeight="bold">You're on {current} / {gameLength}</Text>
   }
 
   return (
@@ -38,6 +38,30 @@ export default function Game({ data }) {
               START
             </Button>
           </Center>
+          <Heading as="h2" size="md">Not got time for that? Try a shorter game</Heading>
+          <HStack spacing="5px" justifyContent="center">
+            <Button
+              colorScheme="orange"
+              size="lg"
+              onClick={() => dispatch({ type: "INIT_GAME", countries: data, gameLength: 25 })}
+            >
+              25
+            </Button>
+            <Button
+              colorScheme="orange"
+              size="lg"
+              onClick={() => dispatch({ type: "INIT_GAME", countries: data, gameLength: 50 })}
+            >
+              50
+            </Button>
+            <Button
+              colorScheme="orange"
+              size="lg"
+              onClick={() => dispatch({ type: "INIT_GAME", countries: data, gameLength: 100 })}
+            >
+              100
+            </Button>
+          </HStack>
 
         </>
       )}
@@ -50,13 +74,13 @@ export default function Game({ data }) {
             <Text fontSize="lg" fontWeight="bold">Score: {score}</Text>
           </Flex>
 
-          <Image border="black solid 5px" borderRadius="xl" src={countryList[0].flag} w="500px" />
-
+          <Image border="black solid 5px" borderRadius="xl" src={countryList[0].flag} maxW="500px" maxH="500px" />
+          {/* <img style={{ maxWidth: "500px", border: "black solid 5px", maxHeight: "500px" }} src={countryList[0].flag} /> */}
           <Center>
             <Input
               textAlign="center"
+              size="lg"
               fontWeight="bold"
-              width="200px"
               value={answer}
               onChange={(e) =>
                 dispatch({ type: "TYPE_ANSWER", answer: e.target.value })
@@ -70,7 +94,9 @@ export default function Game({ data }) {
           </Center>
 
           <HStack spacing="15px" justifyContent="center" fontSize="xl">
-            <Button size="lg" colorScheme="pink" onClick={() => dispatch({ type: "SKIP_COUNTRY" })}>
+            <Button size="lg" colorScheme="pink" onClick={() =>
+              dispatch({ type: "SKIP_COUNTRY" })
+            }>
               Skip
             </Button>
             <Button colorScheme="red" onClick={() => dispatch({ type: "END_GAME" })} variant="ghost">
