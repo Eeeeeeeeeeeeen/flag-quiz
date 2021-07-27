@@ -27,35 +27,37 @@ export default function Game({ data }) {
     <>
       {gameState === "NOT_STARTED" && (
         <>
-          <Heading as="h1" size="2xl">Eeyan's Flag Quiz!</Heading>
+          <Heading as="h1" size="4xl" textTransform="uppercase" fontWeight="extrabold">
+            Eeyan's <Text as="span" textColor="teal">Flag Quiz</Text>
+          </Heading>
           <Heading as="h2" size="md">There are 196 flags in this quiz, this might take a while!</Heading>
           <Center>
             <Button
-              colorScheme="pink"
+              colorScheme="teal"
               size="lg"
               onClick={() => dispatch({ type: "INIT_GAME", countries: data })}
             >
               START
             </Button>
           </Center>
-          <Heading as="h2" size="md">Not got time for that? Try a shorter game</Heading>
+          <Heading as="h2" size="md">Not got time for that? Reduce the flags to</Heading>
           <HStack spacing="5px" justifyContent="center">
             <Button
-              colorScheme="orange"
+              colorScheme="teal"
               size="lg"
               onClick={() => dispatch({ type: "INIT_GAME", countries: data, gameLength: 25 })}
             >
               25
             </Button>
             <Button
-              colorScheme="orange"
+              colorScheme="teal"
               size="lg"
               onClick={() => dispatch({ type: "INIT_GAME", countries: data, gameLength: 50 })}
             >
               50
             </Button>
             <Button
-              colorScheme="orange"
+              colorScheme="teal"
               size="lg"
               onClick={() => dispatch({ type: "INIT_GAME", countries: data, gameLength: 100 })}
             >
@@ -75,8 +77,7 @@ export default function Game({ data }) {
           </Flex>
 
           <Image border="black solid 5px" borderRadius="xl" src={countryList[0].flag} maxW="500px" maxH="500px" />
-          {/* <img style={{ maxWidth: "500px", border: "black solid 5px", maxHeight: "500px" }} src={countryList[0].flag} /> */}
-          <Center>
+          <HStack spacing="10px">
             <Input
               textAlign="center"
               size="lg"
@@ -91,10 +92,13 @@ export default function Game({ data }) {
                 }
               }}
             />
-          </Center>
+            <Button size="lg" colorScheme="teal" onClick={(e) => dispatch({ type: "SUBMIT_ANSWER", country: answer })}>
+              Submit
+            </Button>
+          </HStack>
 
           <HStack spacing="15px" justifyContent="center" fontSize="xl">
-            <Button size="lg" colorScheme="pink" onClick={() =>
+            <Button size="lg" colorScheme="teal" onClick={() =>
               dispatch({ type: "SKIP_COUNTRY" })
             }>
               Skip
@@ -106,13 +110,12 @@ export default function Game({ data }) {
         </>
       )
       }
-
       {
         gameState === "FINISHED" && (
           <>
             <Heading as="h1" size="2xl">Thanks for playing!</Heading>
             <Heading as="h2" size="xl">You scored {score}!</Heading>
-            <Button size="lg" colorScheme="pink" onClick={() => dispatch({ type: "RESTART" })}>
+            <Button size="lg" colorScheme="teal" onClick={() => dispatch({ type: "RESTART" })}>
               Try again?
             </Button>
           </>
