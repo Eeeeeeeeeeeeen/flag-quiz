@@ -20,7 +20,7 @@ export default function Game({ data }) {
   function getProgress() {
     const current = correct.length + skipped.length + 1;
 
-    return <Text fontSize="lg" fontWeight="bold">You're on {current} / {gameLength}</Text>
+    return <Text fontSize="lg" fontWeight="bold">{current} / {gameLength}</Text>
   }
 
   return (
@@ -67,7 +67,6 @@ export default function Game({ data }) {
 
         </>
       )}
-
       {gameState === "STARTED" && countryList.length > 0 && (
         <>
           <Flex>
@@ -95,21 +94,20 @@ export default function Game({ data }) {
             <Button size="lg" colorScheme="teal" onClick={(e) => dispatch({ type: "SUBMIT_ANSWER", country: answer })}>
               Submit
             </Button>
-          </HStack>
-
-          <HStack spacing="15px" justifyContent="center" fontSize="xl">
             <Button size="lg" colorScheme="teal" onClick={() =>
               dispatch({ type: "SKIP_COUNTRY" })
             }>
               Skip
             </Button>
+          </HStack>
+
+          <HStack spacing="15px" justifyContent="center" fontSize="xl">
             <Button colorScheme="red" onClick={() => dispatch({ type: "END_GAME" })} variant="ghost">
               Give Up!
             </Button>
           </HStack>
         </>
-      )
-      }
+      )}
       {
         gameState === "FINISHED" && (
           <>

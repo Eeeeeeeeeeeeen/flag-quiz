@@ -1360,7 +1360,6 @@
         "flag": "https://restcountries.eu/data/kor.svg",
         "name": "Korea (Republic of)",
         "altSpellings": [
-            "KR",
             "South Korea",
             "Republic of Korea"
         ]
@@ -1408,7 +1407,6 @@
         "flag": "https://restcountries.eu/data/swz.svg",
         "name": "Swaziland",
         "altSpellings": [
-            "weSwatini",
             "Swatini",
             "eSwatini",
             "Ngwane",
@@ -1439,7 +1437,6 @@
         "flag": "https://restcountries.eu/data/syr.svg",
         "name": "Syrian Arab Republic",
         "altSpellings": [
-            "SY",
             "Syria",
             "Syrian Arab Republic",
             "Al-Jumhūrīyah Al-ʻArabīyah As-Sūrīyah"
@@ -1469,7 +1466,6 @@
         "name": "Thailand",
         "altSpellings": [
             "Prathet",
-            "Thai",
             "Kingdom of Thailand",
             "ราชอาณาจักรไทย",
             "Ratcha Anachak Thai"
@@ -1613,7 +1609,6 @@
         "flag": "https://restcountries.eu/data/vnm.svg",
         "name": "Viet Nam",
         "altSpellings": [
-            "VN",
             "Vietnam",
             "Socialist Republic of Vietnam",
             "Cộng hòa Xã hội chủ nghĩa Việt Nam"
