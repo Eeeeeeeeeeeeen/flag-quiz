@@ -1,8 +1,9 @@
 import { MoonIcon, SunIcon } from "@chakra-ui/icons";
-import { Box, Button, Center, Flex, Grid, Spacer, Stack, Text, useColorMode } from "@chakra-ui/react";
+import { Box, Button, Center, Flex, Grid, HStack, Spacer, Stack, Text, useColorMode } from "@chakra-ui/react";
 import Head from "next/head";
 import { useEffect, useState } from "react";
 import Game from "../components/Game";
+import GithubIcon from "../components/Icons/GithubIcon"
 
 export default function Home() {
   const [data, setData] = useState()
@@ -20,27 +21,21 @@ export default function Home() {
         <title>Eeyan's Flag Quiz</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-
       <Grid h="100vh" templateRows="4rem 1fr">
         <Box as="header">
           <Flex m="0 10px" height="100%" alignItems="center">
             <Text as="a" href="/" fontSize="xl" fontWeight="bold">Flag Quiz</Text>
             <Spacer />
-            {/* <HStack spacing="5px">
-              <Button as="a" colorScheme="teal" href="https://github.com/eeeeeeeeeeeeen/flag-quiz" target="_blank" rel="noopener noreferrer">
+            <HStack spacing="5px">
+              <Button as="a" size="lg" colorScheme="teal" href="https://github.com/eeeeeeeeeeeeen/flag-quiz" target="_blank" rel="noopener noreferrer">
                 <GithubIcon boxSize="8" colorMode={colorMode} />
               </Button>
-              <Button as="a" colorScheme="teal" href="https://twitter.com/eeyan_t" target="_blank" rel="noopener noreferrer">
-                <TwitterIcon boxSize="8" colorMode={colorMode} />
+              <Button colorScheme="teal" onClick={toggleColorMode} ml="40px" size="lg">
+                {colorMode !== 'dark' ? <MoonIcon boxSize="8" /> : <SunIcon boxSize="8" />}
               </Button>
-            </HStack> */}
-            <Button colorScheme="teal" onClick={toggleColorMode} ml="40px" size="lg">
-              {colorMode !== 'dark' ? <MoonIcon boxSize="8" /> : <SunIcon boxSize="8" />}
-            </Button>
-
+            </HStack>
           </Flex>
         </Box>
-
         <Flex as="main" flexDirection="column" justifyContent="center">
           <Center verticalAlign="center">
             <Stack spacing="6" maxWidth="1024px" textAlign="center" m="0 10px">

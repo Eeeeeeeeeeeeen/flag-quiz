@@ -1,6 +1,7 @@
 import { Button, Center, Flex, Heading, Spacer, Text, Image, Input, HStack } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import useGameReducer from "../hooks/useGameReducer";
+import SkippedCountries from "./SkippedCountries";
 
 export default function Game({ data }) {
   const [state, dispatch] = useGameReducer();
@@ -116,6 +117,7 @@ export default function Game({ data }) {
             <Button size="lg" colorScheme="teal" onClick={() => dispatch({ type: "RESTART" })}>
               Try again?
             </Button>
+            <SkippedCountries countries={skipped} />
           </>
         )
       }
