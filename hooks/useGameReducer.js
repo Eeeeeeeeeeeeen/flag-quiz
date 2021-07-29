@@ -9,7 +9,8 @@ export default function useGameReducer() {
     skipped: [],
     gameState: "NOT_STARTED",
     score: 0,
-    gameLength: 0
+    gameLength: 0,
+    wrongAnswer: false,
   };
 
   let [state, dispatch] = useReducer((state, action) => {
@@ -35,10 +36,12 @@ export default function useGameReducer() {
             answer: "",
             score: newScore,
             countryList: newArray,
+            wrongAnswer: false,
           };
         } else {
           return {
             ...state,
+            wrongAnswer: true
           };
         }
       }

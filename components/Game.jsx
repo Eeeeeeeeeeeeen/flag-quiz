@@ -7,7 +7,7 @@ export default function Game({ data }) {
   const [state, dispatch] = useGameReducer();
   const [firstLoad, setFirstLoad] = useState(true);
 
-  const { gameState, answer, score, countryList, correct, skipped, gameLength } = state;
+  const { gameState, answer, score, countryList, correct, skipped, gameLength, wrongAnswer } = state;
 
   //TODO: Fix this, it's not very efficient
   useEffect(() => {
@@ -83,6 +83,9 @@ export default function Game({ data }) {
               size="lg"
               fontWeight="bold"
               value={answer}
+              isInvalid={wrongAnswer}
+              errorBorderColor="red.500"
+              focusBorderColor={wrongAnswer ? 'red.500' : 'teal.500'}
               onChange={(e) =>
                 dispatch({ type: "TYPE_ANSWER", answer: e.target.value })
               }
