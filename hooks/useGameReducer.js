@@ -59,7 +59,8 @@ export default function useGameReducer() {
           ...state,
           countryList: newArray,
           skipped: newSkipped,
-          answer: ""
+          answer: "",
+          wrongAnswer: false
         };
       }
       case "INIT_GAME": {
@@ -78,7 +79,8 @@ export default function useGameReducer() {
           skipped: [],
           score: 0,
           answer: "",
-          gameLength: action.gameLength ? action.gameLength : action.countries.length
+          gameLength: action.gameLength ? action.gameLength : action.countries.length,
+          wrongAnswer: false
         };
       }
       case "END_GAME": {

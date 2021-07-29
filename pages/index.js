@@ -1,13 +1,11 @@
-import { MoonIcon, SunIcon } from "@chakra-ui/icons";
-import { Box, Button, Center, Flex, Grid, HStack, Spacer, Stack, Text, useColorMode } from "@chakra-ui/react";
+import { Center, Flex, Grid, Stack } from "@chakra-ui/react";
 import Head from "next/head";
 import { useEffect, useState } from "react";
 import Game from "../components/Game";
-import GithubIcon from "../components/Icons/GithubIcon"
+import Header from "../components/Header";
 
 export default function Home() {
   const [data, setData] = useState()
-  const { toggleColorMode, colorMode } = useColorMode()
 
   useEffect(() => {
     fetch("Countries.json")
@@ -22,20 +20,7 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Grid h="100vh" templateRows="4rem 1fr">
-        <Box as="header">
-          <Flex m="0 10px" height="100%" alignItems="center">
-            <Text as="a" href="/" fontSize="xl" fontWeight="bold">Flag Quiz</Text>
-            <Spacer />
-            <HStack spacing="5px">
-              <Button as="a" size="lg" colorScheme="teal" href="https://github.com/eeeeeeeeeeeeen/flag-quiz" target="_blank" rel="noopener noreferrer">
-                <GithubIcon boxSize="8" colorMode={colorMode} />
-              </Button>
-              <Button colorScheme="teal" onClick={toggleColorMode} ml="40px" size="lg">
-                {colorMode !== 'dark' ? <MoonIcon boxSize="8" /> : <SunIcon boxSize="8" />}
-              </Button>
-            </HStack>
-          </Flex>
-        </Box>
+        <Header />
         <Flex as="main" flexDirection="column" justifyContent="center">
           <Center verticalAlign="center">
             <Stack spacing="6" maxWidth="1024px" textAlign="center" m="0 10px">

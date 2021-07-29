@@ -1,4 +1,4 @@
-import { Button, Center, Flex, Heading, Spacer, Text, Image, Input, HStack } from "@chakra-ui/react";
+import { Button, Center, Flex, Heading, Spacer, Text, Image, Input, HStack, useColorModeValue } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import useGameReducer from "../hooks/useGameReducer";
 import SkippedCountries from "./SkippedCountries";
@@ -6,6 +6,9 @@ import SkippedCountries from "./SkippedCountries";
 export default function Game({ data }) {
   const [state, dispatch] = useGameReducer();
   const [firstLoad, setFirstLoad] = useState(true);
+
+  const titleColor = useColorModeValue("blue.600", "teal.500")
+  const color = useColorModeValue("blue", "teal")
 
   const { gameState, answer, score, countryList, correct, skipped, gameLength, wrongAnswer } = state;
 
@@ -16,7 +19,7 @@ export default function Game({ data }) {
     }
     if (firstLoad)
       setFirstLoad(false);
-  }, [score, JSON.stringify(countryList)]);
+  }, [score, countryList]);
 
   function getProgress() {
     const current = correct.length + skipped.length + 1;
@@ -29,12 +32,12 @@ export default function Game({ data }) {
       {gameState === "NOT_STARTED" && (
         <>
           <Heading as="h1" size="4xl" textTransform="uppercase" fontWeight="extrabold">
-            Eeyan's <Text as="span" textColor="teal">Flag Quiz</Text>
+            Eeyan's <Text as="span" textColor={titleColor}>Flag Quiz</Text>
           </Heading>
           <Heading as="h2" size="md">There are 196 flags in this quiz, this might take a while!</Heading>
           <Center>
             <Button
-              colorScheme="teal"
+              colorScheme={color}
               size="lg"
               onClick={() => dispatch({ type: "INIT_GAME", countries: data })}
             >
@@ -44,21 +47,21 @@ export default function Game({ data }) {
           <Heading as="h2" size="md">Not got time for that? Reduce the flags to</Heading>
           <HStack spacing="5px" justifyContent="center">
             <Button
-              colorScheme="teal"
+              colorScheme={color}
               size="lg"
               onClick={() => dispatch({ type: "INIT_GAME", countries: data, gameLength: 25 })}
             >
               25
             </Button>
             <Button
-              colorScheme="teal"
+              colorScheme={color}
               size="lg"
               onClick={() => dispatch({ type: "INIT_GAME", countries: data, gameLength: 50 })}
             >
               50
             </Button>
             <Button
-              colorScheme="teal"
+              colorScheme={color}
               size="lg"
               onClick={() => dispatch({ type: "INIT_GAME", countries: data, gameLength: 100 })}
             >
@@ -86,6 +89,8 @@ export default function Game({ data }) {
               isInvalid={wrongAnswer}
               errorBorderColor="red.500"
               focusBorderColor={wrongAnswer ? 'red.500' : 'teal.500'}
+              placeholder="Country"
+              variant="filled"
               onChange={(e) =>
                 dispatch({ type: "TYPE_ANSWER", answer: e.target.value })
               }
@@ -95,10 +100,10 @@ export default function Game({ data }) {
                 }
               }}
             />
-            <Button size="lg" colorScheme="teal" onClick={(e) => dispatch({ type: "SUBMIT_ANSWER", country: answer })}>
+            <Button size="lg" colorScheme={color} onClick={(e) => dispatch({ type: "SUBMIT_ANSWER", country: answer })}>
               Submit
             </Button>
-            <Button size="lg" colorScheme="teal" onClick={() =>
+            <Button size="lg" colorScheme={color} onClick={() =>
               dispatch({ type: "SKIP_COUNTRY" })
             }>
               Skip
@@ -117,8 +122,8 @@ export default function Game({ data }) {
           <>
             <Heading as="h1" size="2xl">Thanks for playing!</Heading>
             <Heading as="h2" size="xl">You scored {score}!</Heading>
-            <Button size="lg" colorScheme="teal" onClick={() => dispatch({ type: "RESTART" })}>
-              Try again?
+            <Button size="lg" colorScheme={color} onClick={() => dispatch({ type: "RESTART" })}>
+              Play again!
             </Button>
             <SkippedCountries countries={skipped} />
           </>
