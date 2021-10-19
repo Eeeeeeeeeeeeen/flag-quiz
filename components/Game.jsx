@@ -1,4 +1,15 @@
-import { Button, Center, Flex, Heading, Spacer, Text, Image, Input, HStack, useColorModeValue } from "@chakra-ui/react";
+import {
+  Button,
+  Center,
+  Flex,
+  Heading,
+  Spacer,
+  Text,
+  Image,
+  Input,
+  HStack,
+  useColorModeValue,
+} from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import useGameReducer from "../hooks/useGameReducer";
 import SkippedCountries from "./SkippedCountries";
@@ -7,34 +18,56 @@ export default function Game({ data }) {
   const [state, dispatch] = useGameReducer();
   const [firstLoad, setFirstLoad] = useState(true);
 
-  const titleColor = useColorModeValue("blue.600", "teal.500")
-  const color = useColorModeValue("blue", "teal")
+  const titleColor = useColorModeValue("blue.600", "teal.500");
+  const color = useColorModeValue("blue", "teal");
 
-  const { gameState, answer, score, countryList, correct, skipped, gameLength, wrongAnswer } = state;
+  const {
+    gameState,
+    answer,
+    score,
+    countryList,
+    correct,
+    skipped,
+    gameLength,
+    wrongAnswer,
+  } = state;
 
   //TODO: Fix this, it's not very efficient
   useEffect(() => {
     if (correct.length + skipped.length === gameLength && !firstLoad) {
       dispatch({ type: "END_GAME" });
     }
-    if (firstLoad)
-      setFirstLoad(false);
+    if (firstLoad) setFirstLoad(false);
   }, [score, countryList]);
 
   function getProgress() {
     const current = correct.length + skipped.length + 1;
 
-    return <Text fontSize="lg" fontWeight="bold">{current} / {gameLength}</Text>
+    return (
+      <Text fontSize="lg" fontWeight="bold">
+        {current} / {gameLength}
+      </Text>
+    );
   }
 
   return (
     <>
       {gameState === "NOT_STARTED" && (
         <>
-          <Heading as="h1" size="4xl" textTransform="uppercase" fontWeight="extrabold">
-            Eeyan's <Text as="span" textColor={titleColor}>Flag Quiz</Text>
+          <Heading
+            as="h1"
+            size="4xl"
+            textTransform="uppercase"
+            fontWeight="extrabold"
+          >
+            Eeyan's{" "}
+            <Text as="span" textColor={titleColor}>
+              Flag Quiz
+            </Text>
           </Heading>
-          <Heading as="h2" size="md">There are 196 flags in this quiz, this might take a while!</Heading>
+          <Heading as="h2" size="md">
+            There are 196 flags in this quiz, this might take a while!
+          </Heading>
           <Center>
             <Button
               colorScheme={color}
@@ -44,31 +77,42 @@ export default function Game({ data }) {
               START
             </Button>
           </Center>
-          <Heading as="h2" size="md">Not got time for that? Reduce the flags to</Heading>
+          <Heading as="h2" size="md">
+            Not got time for that? Reduce the flags to
+          </Heading>
           <HStack spacing="5px" justifyContent="center">
             <Button
               colorScheme={color}
               size="lg"
-              onClick={() => dispatch({ type: "INIT_GAME", countries: data, gameLength: 25 })}
+              onClick={() =>
+                dispatch({ type: "INIT_GAME", countries: data, gameLength: 25 })
+              }
             >
               25
             </Button>
             <Button
               colorScheme={color}
               size="lg"
-              onClick={() => dispatch({ type: "INIT_GAME", countries: data, gameLength: 50 })}
+              onClick={() =>
+                dispatch({ type: "INIT_GAME", countries: data, gameLength: 50 })
+              }
             >
               50
             </Button>
             <Button
               colorScheme={color}
               size="lg"
-              onClick={() => dispatch({ type: "INIT_GAME", countries: data, gameLength: 100 })}
+              onClick={() =>
+                dispatch({
+                  type: "INIT_GAME",
+                  countries: data,
+                  gameLength: 100,
+                })
+              }
             >
               100
             </Button>
           </HStack>
-
         </>
       )}
       {gameState === "STARTED" && countryList.length > 0 && (
@@ -76,10 +120,18 @@ export default function Game({ data }) {
           <Flex>
             {getProgress()}
             <Spacer />
-            <Text fontSize="lg" fontWeight="bold">Score: {score}</Text>
+            <Text fontSize="lg" fontWeight="bold">
+              Score: {score}
+            </Text>
           </Flex>
 
-          <Image border="black solid 5px" borderRadius="xl" src={countryList[0].flag} maxW="500px" maxH="500px" />
+          <Image
+            border="black solid 5px"
+            borderRadius="xl"
+            src={countryList[0].flags.svg}
+            maxW="500px"
+            maxH="500px"
+          />
           <HStack spacing="10px">
             <Input
               textAlign="center"
@@ -88,7 +140,7 @@ export default function Game({ data }) {
               value={answer}
               isInvalid={wrongAnswer}
               errorBorderColor="red.500"
-              focusBorderColor={wrongAnswer ? 'red.500' : 'teal.500'}
+              focusBorderColor={wrongAnswer ? "red.500" : "teal.500"}
               placeholder="Country"
               variant="filled"
               onChange={(e) =>
@@ -100,35 +152,53 @@ export default function Game({ data }) {
                 }
               }}
             />
-            <Button size="lg" colorScheme={color} onClick={(e) => dispatch({ type: "SUBMIT_ANSWER", country: answer })}>
+            <Button
+              size="lg"
+              colorScheme={color}
+              onClick={(e) =>
+                dispatch({ type: "SUBMIT_ANSWER", country: answer })
+              }
+            >
               Submit
             </Button>
-            <Button size="lg" colorScheme={color} onClick={() =>
-              dispatch({ type: "SKIP_COUNTRY" })
-            }>
+            <Button
+              size="lg"
+              colorScheme={color}
+              onClick={() => dispatch({ type: "SKIP_COUNTRY" })}
+            >
               Skip
             </Button>
           </HStack>
 
           <HStack spacing="15px" justifyContent="center" fontSize="xl">
-            <Button colorScheme="red" onClick={() => dispatch({ type: "END_GAME" })} variant="ghost">
+            <Button
+              colorScheme="red"
+              onClick={() => dispatch({ type: "END_GAME" })}
+              variant="ghost"
+            >
               Give Up!
             </Button>
           </HStack>
         </>
       )}
-      {
-        gameState === "FINISHED" && (
-          <>
-            <Heading as="h1" size="2xl">Thanks for playing!</Heading>
-            <Heading as="h2" size="xl">You scored {score}!</Heading>
-            <Button size="lg" colorScheme={color} onClick={() => dispatch({ type: "RESTART" })}>
-              Play again!
-            </Button>
-            <SkippedCountries countries={skipped} />
-          </>
-        )
-      }
+      {gameState === "FINISHED" && (
+        <>
+          <Heading as="h1" size="2xl">
+            Thanks for playing!
+          </Heading>
+          <Heading as="h2" size="xl">
+            You scored {score}!
+          </Heading>
+          <Button
+            size="lg"
+            colorScheme={color}
+            onClick={() => dispatch({ type: "RESTART" })}
+          >
+            Play again!
+          </Button>
+          <SkippedCountries countries={skipped} />
+        </>
+      )}
     </>
   );
 }

@@ -5,19 +5,22 @@ import Game from "../components/Game";
 import Header from "../components/Header";
 
 export default function Home() {
-  const [data, setData] = useState()
+  const [data, setData] = useState();
 
   useEffect(() => {
-    fetch("Countries.json")
+    fetch("https://restcountries.com/v3.1/all")
       .then((res) => res.json())
-      .then((res) => setData(res))
-  }, [])
+      .then((res) =>
+        setData(res.filter((country) => country.independent === true))
+      );
+  }, []);
+  console.log(data);
 
   return (
     <>
       <Head>
         <title>Eeyan's Flag Quiz</title>
-        <link rel="icon" href="/favicon.ico" />
+        <link rel="icon" href="/me.webp" />
       </Head>
       <Grid h="100vh" templateRows="4rem 1fr">
         <Header />

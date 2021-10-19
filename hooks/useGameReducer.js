@@ -20,10 +20,8 @@ export default function useGameReducer() {
 
         if (
           action.country.toLowerCase() ===
-          state.countryList[0].name.toLowerCase() ||
-          state.countryList[0].altSpellings.findIndex(
-            (c) => c.toLowerCase() === action.country.toLowerCase()
-          ) !== -1
+            state.countryList[0].name.common.toLowerCase() ||
+          state.countryList[0].official
         ) {
           newScore += 1;
 
@@ -41,7 +39,7 @@ export default function useGameReducer() {
         } else {
           return {
             ...state,
-            wrongAnswer: true
+            wrongAnswer: true,
           };
         }
       }
@@ -60,7 +58,7 @@ export default function useGameReducer() {
           countryList: newArray,
           skipped: newSkipped,
           answer: "",
-          wrongAnswer: false
+          wrongAnswer: false,
         };
       }
       case "INIT_GAME": {
@@ -79,8 +77,10 @@ export default function useGameReducer() {
           skipped: [],
           score: 0,
           answer: "",
-          gameLength: action.gameLength ? action.gameLength : action.countries.length,
-          wrongAnswer: false
+          gameLength: action.gameLength
+            ? action.gameLength
+            : action.countries.length,
+          wrongAnswer: false,
         };
       }
       case "END_GAME": {
