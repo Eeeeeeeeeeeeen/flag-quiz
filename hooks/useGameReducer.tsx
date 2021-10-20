@@ -1,15 +1,34 @@
 import { useReducer } from "react";
+import { Country } from "../pages";
 import useTextUtils from "./useTextUtils";
+
+interface GameState {
+  answer: string;
+  countryList: Country[];
+  currentCountry: number;
+  correct: Country[];
+  skipped: Country[];
+  gameState: GameStatus;
+  score: number;
+  gameLength: number;
+  wrongAnswer: boolean;
+}
+
+enum GameStatus {
+  NOT_STARTED,
+  STARTED,
+  FINISHED
+}
 
 export default function useGameReducer() {
   const [sanitiseText] = useTextUtils()
-  let initialState = {
+  let initialState: GameState = {
     answer: "",
     countryList: [],
     currentCountry: 0,
     correct: [],
     skipped: [],
-    gameState: "NOT_STARTED",
+    gameState: GameStatus.NOT_STARTED,
     score: 0,
     gameLength: 0,
     wrongAnswer: false,
@@ -74,7 +93,7 @@ export default function useGameReducer() {
 
         return {
           ...state,
-          gameState: "STARTED",
+          gameState: GameStatus.STARTED,
           countryList: countries,
           correct: [],
           skipped: [],
@@ -89,13 +108,13 @@ export default function useGameReducer() {
       case "END_GAME": {
         return {
           ...state,
-          gameState: "FINISHED",
+          gameState: GameStatus.FINISHED,
         };
       }
       case "RESTART": {
         return {
           ...state,
-          gameState: "NOT_STARTED",
+          gameState: GameStatus.NOT_STARTED,
         };
       }
     }
@@ -104,7 +123,7 @@ export default function useGameReducer() {
   return [state, dispatch];
 }
 
-function shuffle(a) {
+function shuffle(a: Country[]) {
   for (let i = a.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [a[i], a[j]] = [a[j], a[i]];

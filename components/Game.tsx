@@ -10,11 +10,12 @@ import {
   HStack,
   useColorModeValue,
 } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
+import { KeyboardEvent, KeyboardEventHandler, useEffect, useState } from "react";
 import useGameReducer from "../hooks/useGameReducer";
+import { Country } from "../pages";
 import SkippedCountries from "./SkippedCountries";
 
-export default function Game({ data }) {
+export default function Game(countries: Country[]) {
   const [state, dispatch] = useGameReducer();
   const [firstLoad, setFirstLoad] = useState(true);
 
@@ -72,7 +73,7 @@ export default function Game({ data }) {
             <Button
               colorScheme={color}
               size="lg"
-              onClick={() => dispatch({ type: "INIT_GAME", countries: data })}
+              onClick={() => dispatch({ type: "INIT_GAME", countries: countries })}
             >
               START
             </Button>
@@ -85,7 +86,7 @@ export default function Game({ data }) {
               colorScheme={color}
               size="lg"
               onClick={() =>
-                dispatch({ type: "INIT_GAME", countries: data, gameLength: 25 })
+                dispatch({ type: "INIT_GAME", countries: countries, gameLength: 25 })
               }
             >
               25
@@ -94,7 +95,7 @@ export default function Game({ data }) {
               colorScheme={color}
               size="lg"
               onClick={() =>
-                dispatch({ type: "INIT_GAME", countries: data, gameLength: 50 })
+                dispatch({ type: "INIT_GAME", countries: countries, gameLength: 50 })
               }
             >
               50
@@ -105,7 +106,7 @@ export default function Game({ data }) {
               onClick={() =>
                 dispatch({
                   type: "INIT_GAME",
-                  countries: data,
+                  countries: countries,
                   gameLength: 100,
                 })
               }
@@ -144,11 +145,11 @@ export default function Game({ data }) {
               placeholder="Country"
               variant="filled"
               onChange={(e) =>
-                dispatch({ type: "TYPE_ANSWER", answer: e.target.value })
+                dispatch({ type: "TYPE_ANSWER", answer: e.currentTarget.value })
               }
-              onKeyPress={(e) => {
+              onKeyPress={(e: KeyboardEvent<HTMLInputElement>) => {
                 if (e.key === "Enter") {
-                  dispatch({ type: "SUBMIT_ANSWER", country: e.target.value });
+                  dispatch({ type: "SUBMIT_ANSWER", country: e.currentTarget.value });
                 }
               }}
             />

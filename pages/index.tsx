@@ -4,16 +4,26 @@ import { useEffect, useState } from "react";
 import Game from "../components/Game";
 import Header from "../components/Header";
 
+export interface Country {
+  independent: boolean;
+  name: Name;
+}
+
+export interface Name {
+  common: string;
+  official: string;
+}
+
 export default function Home() {
-  const [data, setData] = useState();
-  const [isLoading, setIsLoading] = useState(true);
+  const [data, setData] = useState<Country[]>();
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
     fetch("https://restcountries.com/v3.1/all")
       .then((res) => res.json())
       .then((res) => {
-        setData(res.filter((country) => country.independent === true));
-        setIsLoading(false);
+        setData(res.filter((country: Country) => country.independent === true));
+        setIsLoading(false)
       });
   }, []);
 
