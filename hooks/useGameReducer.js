@@ -19,11 +19,12 @@ export default function useGameReducer() {
     switch (action.type) {
       case "SUBMIT_ANSWER": {
         let newScore = state.score;
+        let country = sanitiseText(action.country.toLowerCase())
 
         if (
-          sanitiseText(action.country.toLowerCase()) ===
-          sanitiseText(state.countryList[0].name.common.toLowerCase()) ||
-          sanitiseText(state.countryList[0].official)
+          country ===
+          sanitiseText(state.countryList[0].name.common.toLowerCase()) || country ===
+          sanitiseText(state.countryList[0].name.official.toLowerCase())
         ) {
           newScore += 1;
 
