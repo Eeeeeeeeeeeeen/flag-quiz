@@ -1,6 +1,8 @@
 import { useReducer } from "react";
+import useTextUtils from "./useTextUtils";
 
 export default function useGameReducer() {
+  const [sanitiseText] = useTextUtils()
   let initialState = {
     answer: "",
     countryList: [],
@@ -19,9 +21,9 @@ export default function useGameReducer() {
         let newScore = state.score;
 
         if (
-          action.country.toLowerCase() ===
-            state.countryList[0].name.common.toLowerCase() ||
-          state.countryList[0].official
+          sanitiseText(action.country.toLowerCase()) ===
+          sanitiseText(state.countryList[0].name.common.toLowerCase()) ||
+          sanitiseText(state.countryList[0].official)
         ) {
           newScore += 1;
 
