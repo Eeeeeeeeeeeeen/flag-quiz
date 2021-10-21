@@ -173,8 +173,6 @@ const Game: FC<GameProps> = ({ countries }) => {
                 })
               }
               onKeyPress={(e: KeyboardEvent<HTMLInputElement>) => {
-                console.log(e);
-                console.log(e.currentTarget.value);
                 if (e.key === "Enter") {
                   dispatch({
                     type: GameActions.SUBMIT_ANSWER,
