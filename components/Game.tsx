@@ -11,7 +11,7 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 import { KeyboardEvent, KeyboardEventHandler, useEffect, useState } from "react";
-import useGameReducer from "../hooks/useGameReducer";
+import useGameReducer, { GameActions } from "../hooks/useGameReducer";
 import { Country } from "../pages";
 import SkippedCountries from "./SkippedCountries";
 
@@ -73,7 +73,9 @@ export default function Game(countries: Country[]) {
             <Button
               colorScheme={color}
               size="lg"
-              onClick={() => dispatch({ type: "INIT_GAME", countries: countries })}
+              onClick={() => {
+                return dispatch({ type: GameActions.INIT_GAME, payload: { countries: countries } });
+              }}
             >
               START
             </Button>
@@ -115,91 +117,96 @@ export default function Game(countries: Country[]) {
             </Button>
           </HStack>
         </>
-      )}
-      {gameState === "STARTED" && countryList.length > 0 && (
-        <>
-          <Flex>
-            {getProgress()}
-            <Spacer />
-            <Text fontSize="lg" fontWeight="bold">
-              Score: {score}
-            </Text>
-          </Flex>
+      )
+      }
+      {
+        gameState === "STARTED" && countryList.length > 0 && (
+          <>
+            <Flex>
+              {getProgress()}
+              <Spacer />
+              <Text fontSize="lg" fontWeight="bold">
+                Score: {score}
+              </Text>
+            </Flex>
 
-          <Image
-            border="black solid 5px"
-            borderRadius="xl"
-            src={countryList[0].flags.svg}
-            maxW="500px"
-            maxH="500px"
-          />
-          <HStack spacing="10px">
-            <Input
-              textAlign="center"
-              size="lg"
-              fontWeight="bold"
-              value={answer}
-              isInvalid={wrongAnswer}
-              errorBorderColor="red.500"
-              focusBorderColor={wrongAnswer ? "red.500" : "teal.500"}
-              placeholder="Country"
-              variant="filled"
-              onChange={(e) =>
-                dispatch({ type: "TYPE_ANSWER", answer: e.currentTarget.value })
-              }
-              onKeyPress={(e: KeyboardEvent<HTMLInputElement>) => {
-                if (e.key === "Enter") {
-                  dispatch({ type: "SUBMIT_ANSWER", country: e.currentTarget.value });
-                }
-              }}
+            <Image
+              border="black solid 5px"
+              borderRadius="xl"
+              src={countryList[0].flags.svg}
+              maxW="500px"
+              maxH="500px"
             />
-            <Button
-              size="lg"
-              colorScheme={color}
-              onClick={(e) =>
-                dispatch({ type: "SUBMIT_ANSWER", country: answer })
-              }
-            >
-              Submit
-            </Button>
-            <Button
-              size="lg"
-              colorScheme={color}
-              onClick={() => dispatch({ type: "SKIP_COUNTRY" })}
-            >
-              Skip
-            </Button>
-          </HStack>
+            <HStack spacing="10px">
+              <Input
+                textAlign="center"
+                size="lg"
+                fontWeight="bold"
+                value={answer}
+                isInvalid={wrongAnswer}
+                errorBorderColor="red.500"
+                focusBorderColor={wrongAnswer ? "red.500" : "teal.500"}
+                placeholder="Country"
+                variant="filled"
+                onChange={(e) =>
+                  dispatch({ type: "TYPE_ANSWER", answer: e.currentTarget.value })
+                }
+                onKeyPress={(e: KeyboardEvent<HTMLInputElement>) => {
+                  if (e.key === "Enter") {
+                    dispatch({ type: "SUBMIT_ANSWER", country: e.currentTarget.value });
+                  }
+                }}
+              />
+              <Button
+                size="lg"
+                colorScheme={color}
+                onClick={(e) =>
+                  dispatch({ type: "SUBMIT_ANSWER", country: answer })
+                }
+              >
+                Submit
+              </Button>
+              <Button
+                size="lg"
+                colorScheme={color}
+                onClick={() => dispatch({ type: "SKIP_COUNTRY" })}
+              >
+                Skip
+              </Button>
+            </HStack>
 
-          <HStack spacing="15px" justifyContent="center" fontSize="xl">
+            <HStack spacing="15px" justifyContent="center" fontSize="xl">
+              <Button
+                colorScheme="red"
+                onClick={() => dispatch({ type: "END_GAME" })}
+                variant="ghost"
+              >
+                Give Up!
+              </Button>
+            </HStack>
+          </>
+        )
+      }
+      {
+        gameState === "FINISHED" && (
+          <>
+            <Heading as="h1" size="2xl">
+              Thanks for playing!
+            </Heading>
+            <Heading as="h2" size="xl">
+              You scored {score}!
+            </Heading>
             <Button
-              colorScheme="red"
-              onClick={() => dispatch({ type: "END_GAME" })}
-              variant="ghost"
+              size="lg"
+              colorScheme={color}
+              onClick={() => dispatch({ type: "RESTART" })}
             >
-              Give Up!
+              Play again!
             </Button>
-          </HStack>
-        </>
-      )}
-      {gameState === "FINISHED" && (
-        <>
-          <Heading as="h1" size="2xl">
-            Thanks for playing!
-          </Heading>
-          <Heading as="h2" size="xl">
-            You scored {score}!
-          </Heading>
-          <Button
-            size="lg"
-            colorScheme={color}
-            onClick={() => dispatch({ type: "RESTART" })}
-          >
-            Play again!
-          </Button>
-          <SkippedCountries countries={skipped} />
-        </>
-      )}
+            <SkippedCountries countries={skipped} />
+          </>
+        )
+      }
     </>
   );
 }
