@@ -10,11 +10,19 @@ import {
   HStack,
   useColorModeValue,
 } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
-import useGameReducer from "../hooks/useGameReducer";
+import { FC, KeyboardEvent, useEffect, useState } from "react";
+import useGameReducer, {
+  GameActions,
+  GameStatus,
+} from "../hooks/useGameReducer";
+import { Country } from "../pages";
 import SkippedCountries from "./SkippedCountries";
 
-export default function Game({ data }) {
+interface GameProps {
+  countries: Country[];
+}
+
+const Game: FC<GameProps> = ({ countries }) => {
   const [state, dispatch] = useGameReducer();
   const [firstLoad, setFirstLoad] = useState(true);
 
@@ -35,7 +43,7 @@ export default function Game({ data }) {
   //TODO: Fix this, it's not very efficient
   useEffect(() => {
     if (correct.length + skipped.length === gameLength && !firstLoad) {
-      dispatch({ type: "END_GAME" });
+      dispatch({ type: GameActions.END_GAME });
     }
     if (firstLoad) setFirstLoad(false);
   }, [score, countryList]);
@@ -52,7 +60,7 @@ export default function Game({ data }) {
 
   return (
     <>
-      {gameState === "NOT_STARTED" && (
+      {gameState === GameStatus.NOT_STARTED && (
         <>
           <Heading
             as="h1"
@@ -66,13 +74,20 @@ export default function Game({ data }) {
             </Text>
           </Heading>
           <Heading as="h2" size="md">
-            There are 196 flags in this quiz, this might take a while!
+            There are {countries.length} flags in this quiz, this might take a
+            while!
           </Heading>
           <Center>
             <Button
               colorScheme={color}
               size="lg"
-              onClick={() => dispatch({ type: "INIT_GAME", countries: data })}
+              onClick={() => {
+                return dispatch({
+                  type: GameActions.INIT_GAME,
+                  countries: countries,
+                  gameLength: countries.length,
+                });
+              }}
             >
               START
             </Button>
@@ -85,7 +100,11 @@ export default function Game({ data }) {
               colorScheme={color}
               size="lg"
               onClick={() =>
-                dispatch({ type: "INIT_GAME", countries: data, gameLength: 25 })
+                dispatch({
+                  type: GameActions.INIT_GAME,
+                  countries: countries,
+                  gameLength: 25,
+                })
               }
             >
               25
@@ -94,7 +113,11 @@ export default function Game({ data }) {
               colorScheme={color}
               size="lg"
               onClick={() =>
-                dispatch({ type: "INIT_GAME", countries: data, gameLength: 50 })
+                dispatch({
+                  type: GameActions.INIT_GAME,
+                  countries: countries,
+                  gameLength: 50,
+                })
               }
             >
               50
@@ -104,8 +127,8 @@ export default function Game({ data }) {
               size="lg"
               onClick={() =>
                 dispatch({
-                  type: "INIT_GAME",
-                  countries: data,
+                  type: GameActions.INIT_GAME,
+                  countries: countries,
                   gameLength: 100,
                 })
               }
@@ -115,7 +138,7 @@ export default function Game({ data }) {
           </HStack>
         </>
       )}
-      {gameState === "STARTED" && countryList.length > 0 && (
+      {gameState === GameStatus.STARTED && countryList.length > 0 && (
         <>
           <Flex>
             {getProgress()}
@@ -144,27 +167,32 @@ export default function Game({ data }) {
               placeholder="Country"
               variant="filled"
               onChange={(e) =>
-                dispatch({ type: "TYPE_ANSWER", answer: e.target.value })
+                dispatch({
+                  type: GameActions.TYPE_ANSWER,
+                  payload: e.currentTarget.value,
+                })
               }
-              onKeyPress={(e) => {
+              onKeyPress={(e: KeyboardEvent<HTMLInputElement>) => {
+                console.log(e);
+                console.log(e.currentTarget.value);
                 if (e.key === "Enter") {
-                  dispatch({ type: "SUBMIT_ANSWER", country: e.target.value });
+                  dispatch({
+                    type: GameActions.SUBMIT_ANSWER,
+                  });
                 }
               }}
             />
             <Button
               size="lg"
               colorScheme={color}
-              onClick={(e) =>
-                dispatch({ type: "SUBMIT_ANSWER", country: answer })
-              }
+              onClick={(e) => dispatch({ type: GameActions.SUBMIT_ANSWER })}
             >
               Submit
             </Button>
             <Button
               size="lg"
               colorScheme={color}
-              onClick={() => dispatch({ type: "SKIP_COUNTRY" })}
+              onClick={() => dispatch({ type: GameActions.SKIP_COUNTRY })}
             >
               Skip
             </Button>
@@ -173,7 +201,7 @@ export default function Game({ data }) {
           <HStack spacing="15px" justifyContent="center" fontSize="xl">
             <Button
               colorScheme="red"
-              onClick={() => dispatch({ type: "END_GAME" })}
+              onClick={() => dispatch({ type: GameActions.END_GAME })}
               variant="ghost"
             >
               Give Up!
@@ -181,7 +209,7 @@ export default function Game({ data }) {
           </HStack>
         </>
       )}
-      {gameState === "FINISHED" && (
+      {gameState === GameStatus.FINISHED && (
         <>
           <Heading as="h1" size="2xl">
             Thanks for playing!
@@ -192,7 +220,7 @@ export default function Game({ data }) {
           <Button
             size="lg"
             colorScheme={color}
-            onClick={() => dispatch({ type: "RESTART" })}
+            onClick={() => dispatch({ type: GameActions.RESTART_GAME })}
           >
             Play again!
           </Button>
@@ -201,4 +229,6 @@ export default function Game({ data }) {
       )}
     </>
   );
-}
+};
+
+export default Game;

@@ -4,15 +4,30 @@ import { useEffect, useState } from "react";
 import Game from "../components/Game";
 import Header from "../components/Header";
 
+export interface Country {
+  independent: boolean;
+  name: Name;
+  flags: Flags;
+}
+
+export interface Name {
+  common: string;
+  official: string;
+}
+
+export interface Flags {
+  svg: string;
+}
+
 export default function Home() {
-  const [data, setData] = useState();
-  const [isLoading, setIsLoading] = useState(true);
+  const [data, setData] = useState<Country[]>();
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
     fetch("https://restcountries.com/v3.1/all")
       .then((res) => res.json())
       .then((res) => {
-        setData(res.filter((country) => country.independent === true));
+        setData(res.filter((country: Country) => country.independent === true));
         setIsLoading(false);
       });
   }, []);
@@ -28,7 +43,8 @@ export default function Home() {
         <Flex as="main" flexDirection="column" justifyContent="center">
           <Center verticalAlign="center">
             <Stack spacing="6" maxWidth="1024px" textAlign="center" m="0 10px">
-              {isLoading ? <Spinner /> : <Game data={data} />}
+              {isLoading && <Spinner />}
+              {data && <Game countries={data} />}
             </Stack>
           </Center>
         </Flex>
