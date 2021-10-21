@@ -7,11 +7,16 @@ import Header from "../components/Header";
 export interface Country {
   independent: boolean;
   name: Name;
+  flags: Flags;
 }
 
 export interface Name {
   common: string;
   official: string;
+}
+
+export interface Flags {
+  svg: string;
 }
 
 export default function Home() {
@@ -23,7 +28,7 @@ export default function Home() {
       .then((res) => res.json())
       .then((res) => {
         setData(res.filter((country: Country) => country.independent === true));
-        setIsLoading(false)
+        setIsLoading(false);
       });
   }, []);
 
@@ -38,7 +43,8 @@ export default function Home() {
         <Flex as="main" flexDirection="column" justifyContent="center">
           <Center verticalAlign="center">
             <Stack spacing="6" maxWidth="1024px" textAlign="center" m="0 10px">
-              {isLoading ? <Spinner /> : <Game data={data} />}
+              {isLoading && <Spinner />}
+              {data && <Game countries={data} />}
             </Stack>
           </Center>
         </Flex>

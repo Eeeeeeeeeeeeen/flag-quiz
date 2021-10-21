@@ -10,12 +10,19 @@ import {
   HStack,
   useColorModeValue,
 } from "@chakra-ui/react";
-import { KeyboardEvent, KeyboardEventHandler, useEffect, useState } from "react";
-import useGameReducer, { GameActions } from "../hooks/useGameReducer";
+import { FC, KeyboardEvent, useEffect, useState } from "react";
+import useGameReducer, {
+  GameActions,
+  GameStatus,
+} from "../hooks/useGameReducer";
 import { Country } from "../pages";
 import SkippedCountries from "./SkippedCountries";
 
-export default function Game(countries: Country[]) {
+interface GameProps {
+  countries: Country[];
+}
+
+const Game: FC<GameProps> = ({ countries }) => {
   const [state, dispatch] = useGameReducer();
   const [firstLoad, setFirstLoad] = useState(true);
 
@@ -36,7 +43,7 @@ export default function Game(countries: Country[]) {
   //TODO: Fix this, it's not very efficient
   useEffect(() => {
     if (correct.length + skipped.length === gameLength && !firstLoad) {
-      dispatch({ type: "END_GAME" });
+      dispatch({ type: GameActions.END_GAME });
     }
     if (firstLoad) setFirstLoad(false);
   }, [score, countryList]);
@@ -53,7 +60,7 @@ export default function Game(countries: Country[]) {
 
   return (
     <>
-      {gameState === "NOT_STARTED" && (
+      {gameState === GameStatus.NOT_STARTED && (
         <>
           <Heading
             as="h1"
@@ -67,14 +74,19 @@ export default function Game(countries: Country[]) {
             </Text>
           </Heading>
           <Heading as="h2" size="md">
-            There are 196 flags in this quiz, this might take a while!
+            There are {countries.length} flags in this quiz, this might take a
+            while!
           </Heading>
           <Center>
             <Button
               colorScheme={color}
               size="lg"
               onClick={() => {
-                return dispatch({ type: GameActions.INIT_GAME, payload: { countries: countries } });
+                return dispatch({
+                  type: GameActions.INIT_GAME,
+                  countries: countries,
+                  gameLength: countries.length,
+                });
               }}
             >
               START
@@ -88,7 +100,11 @@ export default function Game(countries: Country[]) {
               colorScheme={color}
               size="lg"
               onClick={() =>
-                dispatch({ type: "INIT_GAME", countries: countries, gameLength: 25 })
+                dispatch({
+                  type: GameActions.INIT_GAME,
+                  countries: countries,
+                  gameLength: 25,
+                })
               }
             >
               25
@@ -97,7 +113,11 @@ export default function Game(countries: Country[]) {
               colorScheme={color}
               size="lg"
               onClick={() =>
-                dispatch({ type: "INIT_GAME", countries: countries, gameLength: 50 })
+                dispatch({
+                  type: GameActions.INIT_GAME,
+                  countries: countries,
+                  gameLength: 50,
+                })
               }
             >
               50
@@ -107,7 +127,7 @@ export default function Game(countries: Country[]) {
               size="lg"
               onClick={() =>
                 dispatch({
-                  type: "INIT_GAME",
+                  type: GameActions.INIT_GAME,
                   countries: countries,
                   gameLength: 100,
                 })
@@ -117,96 +137,98 @@ export default function Game(countries: Country[]) {
             </Button>
           </HStack>
         </>
-      )
-      }
-      {
-        gameState === "STARTED" && countryList.length > 0 && (
-          <>
-            <Flex>
-              {getProgress()}
-              <Spacer />
-              <Text fontSize="lg" fontWeight="bold">
-                Score: {score}
-              </Text>
-            </Flex>
+      )}
+      {gameState === GameStatus.STARTED && countryList.length > 0 && (
+        <>
+          <Flex>
+            {getProgress()}
+            <Spacer />
+            <Text fontSize="lg" fontWeight="bold">
+              Score: {score}
+            </Text>
+          </Flex>
 
-            <Image
-              border="black solid 5px"
-              borderRadius="xl"
-              src={countryList[0].flags.svg}
-              maxW="500px"
-              maxH="500px"
+          <Image
+            border="black solid 5px"
+            borderRadius="xl"
+            src={countryList[0].flags.svg}
+            maxW="500px"
+            maxH="500px"
+          />
+          <HStack spacing="10px">
+            <Input
+              textAlign="center"
+              size="lg"
+              fontWeight="bold"
+              value={answer}
+              isInvalid={wrongAnswer}
+              errorBorderColor="red.500"
+              focusBorderColor={wrongAnswer ? "red.500" : "teal.500"}
+              placeholder="Country"
+              variant="filled"
+              onChange={(e) =>
+                dispatch({
+                  type: GameActions.TYPE_ANSWER,
+                  payload: e.currentTarget.value,
+                })
+              }
+              onKeyPress={(e: KeyboardEvent<HTMLInputElement>) => {
+                console.log(e);
+                console.log(e.currentTarget.value);
+                if (e.key === "Enter") {
+                  dispatch({
+                    type: GameActions.SUBMIT_ANSWER,
+                  });
+                }
+              }}
             />
-            <HStack spacing="10px">
-              <Input
-                textAlign="center"
-                size="lg"
-                fontWeight="bold"
-                value={answer}
-                isInvalid={wrongAnswer}
-                errorBorderColor="red.500"
-                focusBorderColor={wrongAnswer ? "red.500" : "teal.500"}
-                placeholder="Country"
-                variant="filled"
-                onChange={(e) =>
-                  dispatch({ type: "TYPE_ANSWER", answer: e.currentTarget.value })
-                }
-                onKeyPress={(e: KeyboardEvent<HTMLInputElement>) => {
-                  if (e.key === "Enter") {
-                    dispatch({ type: "SUBMIT_ANSWER", country: e.currentTarget.value });
-                  }
-                }}
-              />
-              <Button
-                size="lg"
-                colorScheme={color}
-                onClick={(e) =>
-                  dispatch({ type: "SUBMIT_ANSWER", country: answer })
-                }
-              >
-                Submit
-              </Button>
-              <Button
-                size="lg"
-                colorScheme={color}
-                onClick={() => dispatch({ type: "SKIP_COUNTRY" })}
-              >
-                Skip
-              </Button>
-            </HStack>
-
-            <HStack spacing="15px" justifyContent="center" fontSize="xl">
-              <Button
-                colorScheme="red"
-                onClick={() => dispatch({ type: "END_GAME" })}
-                variant="ghost"
-              >
-                Give Up!
-              </Button>
-            </HStack>
-          </>
-        )
-      }
-      {
-        gameState === "FINISHED" && (
-          <>
-            <Heading as="h1" size="2xl">
-              Thanks for playing!
-            </Heading>
-            <Heading as="h2" size="xl">
-              You scored {score}!
-            </Heading>
             <Button
               size="lg"
               colorScheme={color}
-              onClick={() => dispatch({ type: "RESTART" })}
+              onClick={(e) => dispatch({ type: GameActions.SUBMIT_ANSWER })}
             >
-              Play again!
+              Submit
             </Button>
-            <SkippedCountries countries={skipped} />
-          </>
-        )
-      }
+            <Button
+              size="lg"
+              colorScheme={color}
+              onClick={() => dispatch({ type: GameActions.SKIP_COUNTRY })}
+            >
+              Skip
+            </Button>
+          </HStack>
+
+          <HStack spacing="15px" justifyContent="center" fontSize="xl">
+            <Button
+              colorScheme="red"
+              onClick={() => dispatch({ type: GameActions.END_GAME })}
+              variant="ghost"
+            >
+              Give Up!
+            </Button>
+          </HStack>
+        </>
+      )}
+      {gameState === GameStatus.FINISHED && (
+        <>
+          <Heading as="h1" size="2xl">
+            Thanks for playing!
+          </Heading>
+          <Heading as="h2" size="xl">
+            You scored {score}!
+          </Heading>
+          <Button
+            size="lg"
+            colorScheme={color}
+            onClick={() => dispatch({ type: GameActions.RESTART_GAME })}
+          >
+            Play again!
+          </Button>
+          <SkippedCountries countries={skipped} />
+        </>
+      )}
     </>
   );
-}
+};
+
+export default Game;

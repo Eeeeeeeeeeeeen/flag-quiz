@@ -1,7 +1,13 @@
 import { Stack, Flex, Image, Text, Spacer, Heading } from "@chakra-ui/react";
 import Head from "next/head";
+import { FC } from "react";
+import { Country } from "../pages";
 
-const SkippedCountries = ({ countries }) => {
+interface SkippedCountriesProps {
+  countries: Country[];
+}
+
+const SkippedCountries: FC<SkippedCountriesProps> = ({ countries }) => {
   return (
     <>
       {countries && countries.length > 0 && (
@@ -16,11 +22,11 @@ const SkippedCountries = ({ countries }) => {
             style={{ scrollbarWidth: "thin" }}
           >
             {countries.map((country) => (
-              <Flex key={country[0].name.common} alignItems="center">
-                <Image src={country[0].flags.svg} maxHeight="40px" />
+              <Flex key={country.name.common} alignItems="center">
+                <Image src={country.flags.svg} maxHeight="40px" />
                 <Spacer />
                 <Text mr="10px" fontWeight="bold">
-                  {country[0].name.common}
+                  {country.name.common}
                 </Text>
               </Flex>
             ))}

@@ -14,22 +14,33 @@ export interface GameState {
   wrongAnswer: boolean;
 }
 
-export interface GameAction {
-  type: GameActions;
-  payload: Payload
-}
+type GameAction =
+  | {
+      type: GameActions.INIT_GAME;
+      countries: Country[];
+      gameLength: number;
+    }
+  | {
+      type: GameActions.END_GAME;
+    }
+  | {
+      type: GameActions.TYPE_ANSWER;
+      payload: string;
+    }
+  | {
+      type: GameActions.SUBMIT_ANSWER;
+    }
+  | {
+      type: GameActions.SKIP_COUNTRY;
+    }
+  | {
+      type: GameActions.RESTART_GAME;
+    };
 
-interface Payload {
-  gameLength: number;
-  countries: Country[]
-  answer: string;
-  country: string;
-}
-
-enum GameStatus {
+export enum GameStatus {
   NOT_STARTED,
   STARTED,
-  FINISHED
+  FINISHED,
 }
 
 export enum GameActions {
@@ -38,15 +49,15 @@ export enum GameActions {
   SKIP_COUNTRY,
   INIT_GAME,
   END_GAME,
-  RESTART_GAME
+  RESTART_GAME,
 }
 
 function gameReducer(state: GameState, action: GameAction) {
-  const [sanitiseText] = useTextUtils()
+  const [sanitiseText] = useTextUtils();
 
   switch (action.type) {
     case GameActions.INIT_GAME:
-      let countries = action.payload.countries;
+      let countries = action.countries;
       countries = countries.concat(state.skipped);
       for (var i = 0; i < state.skipped.length; i++) {
         countries.pop();
@@ -61,9 +72,9 @@ function gameReducer(state: GameState, action: GameAction) {
         skipped: [],
         score: 0,
         answer: "",
-        gameLength: action.payload.gameLength
-          ? action.payload.gameLength
-          : action.payload.countries.length,
+        gameLength: action.gameLength
+          ? action.gameLength
+          : action.countries.length,
         wrongAnswer: false,
       };
     case GameActions.END_GAME:
@@ -71,18 +82,17 @@ function gameReducer(state: GameState, action: GameAction) {
         ...state,
         gameState: GameStatus.FINISHED,
       };
-    // case GameActions.RESTART_GAME:
-    //   return;
     case GameActions.TYPE_ANSWER:
-      return { ...state, answer: action.payload.answer };
+      return { ...state, answer: action.payload };
     case GameActions.SUBMIT_ANSWER: {
       let newScore = state.score;
-      let country = sanitiseText(action.payload.country.toLowerCase())
+      let country = sanitiseText(state.answer.toLowerCase());
 
       if (
         country ===
-        sanitiseText(state.countryList[0].name.common.toLowerCase()) || country ===
-        sanitiseText(state.countryList[0].name.official.toLowerCase())
+          sanitiseText(state.countryList[0].name.common.toLowerCase()) ||
+        country ===
+          sanitiseText(state.countryList[0].name.official.toLowerCase())
       ) {
         newScore += 1;
 
@@ -96,7 +106,7 @@ function gameReducer(state: GameState, action: GameAction) {
           score: newScore,
           countryList: newArray,
           wrongAnswer: false,
-          correct: correct
+          correct: correct,
         };
       } else {
         return {
@@ -105,7 +115,9 @@ function gameReducer(state: GameState, action: GameAction) {
         };
       }
     }
-
+    case GameActions.RESTART_GAME: {
+      return { ...state, gameState: GameStatus.NOT_STARTED };
+    }
     case GameActions.SKIP_COUNTRY: {
       const newArray = [...state.countryList];
       const c = newArray.splice(0, 1);
@@ -139,95 +151,9 @@ export default function useGameReducer() {
   };
 
   let [state, dispatch] = useReducer(gameReducer, initialState);
-  return [state, dispatch];
+
+  return [state, dispatch] as const;
 }
-
-// const [state, dispatch] = useReducer(GameReducer, ) => {
-//   switch (action.type) {
-//     case "SUBMIT_ANSWER": {
-//       let newScore = state.score;
-//       let country = sanitiseText(action.country.toLowerCase())
-
-//       if (
-//         country ===
-//         sanitiseText(state.countryList[0].name.common.toLowerCase()) || country ===
-//         sanitiseText(state.countryList[0].name.official.toLowerCase())
-//       ) {
-//         newScore += 1;
-
-//         const newArray = [...state.countryList];
-//         const c = newArray.splice(0, 1);
-//         state.correct.push(c);
-
-//         return {
-//           ...state,
-//           answer: "",
-//           score: newScore,
-//           countryList: newArray,
-//           wrongAnswer: false,
-//         };
-//       } else {
-//         return {
-//           ...state,
-//           wrongAnswer: true,
-//         };
-//       }
-//     }
-//     case "TYPE_ANSWER": {
-//       return { ...state, answer: action.answer };
-//     }
-//     case "SKIP_COUNTRY": {
-//       const newArray = [...state.countryList];
-//       const c = newArray.splice(0, 1);
-
-//       const newSkipped = [...state.skipped];
-//       newSkipped.push(c);
-
-//       return {
-//         ...state,
-//         countryList: newArray,
-//         skipped: newSkipped,
-//         answer: "",
-//         wrongAnswer: false,
-//       };
-//     }
-//     case "INIT_GAME": {
-//       let countries = action.countries;
-//       countries = countries.concat(state.skipped);
-//       for (var i = 0; i < state.skipped.length; i++) {
-//         countries.pop();
-//       }
-//       shuffle(countries);
-
-//       return {
-//         ...state,
-//         gameState: GameStatus.STARTED,
-//         countryList: countries,
-//         correct: [],
-//         skipped: [],
-//         score: 0,
-//         answer: "",
-//         gameLength: action.gameLength
-//           ? action.gameLength
-//           : action.countries.length,
-//         wrongAnswer: false,
-//       };
-//     }
-//     case "END_GAME": {
-//       return {
-//         ...state,
-//         gameState: GameStatus.FINISHED,
-//       };
-//     }
-//     case "RESTART": {
-//       return {
-//         ...state,
-//         gameState: GameStatus.NOT_STARTED,
-//       };
-//     }
-//   }
-// }, initialState);
-
 
 function shuffle(a: Country[]) {
   for (let i = a.length - 1; i > 0; i--) {
