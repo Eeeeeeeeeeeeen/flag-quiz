@@ -55,6 +55,18 @@ export enum GameActions {
 function gameReducer(state: GameState, action: GameAction) {
   const [sanitiseText] = useTextUtils();
 
+  function ContainsCountry(nameArray: string[], name: string): boolean {
+    var isInArray = false;
+
+    for (let index = 0; index < nameArray.length; index++) {
+      if (sanitiseText(nameArray[index]).toLowerCase() == name) {
+        isInArray = true;
+        break;
+      }
+    }
+    return isInArray;
+  }
+
   switch (action.type) {
     case GameActions.INIT_GAME:
       let countries = action.countries;
@@ -92,7 +104,8 @@ function gameReducer(state: GameState, action: GameAction) {
         country ===
           sanitiseText(state.countryList[0].name.common.toLowerCase()) ||
         country ===
-          sanitiseText(state.countryList[0].name.official.toLowerCase())
+          sanitiseText(state.countryList[0].name.official.toLowerCase()) ||
+        ContainsCountry(state.countryList[0].altSpellings, country)
       ) {
         newScore += 1;
 

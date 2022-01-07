@@ -8,6 +8,7 @@ export interface Country {
   independent: boolean;
   name: Name;
   flags: Flags;
+  altSpellings: string[];
 }
 
 export interface Name {
