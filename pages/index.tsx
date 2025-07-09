@@ -25,7 +25,7 @@ export default function Home() {
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    fetch("https://restcountries.com/v3.1/all")
+    fetch("https://restcountries.com/v3.1/all?fields=name,flags,altSpellings,independent")
       .then((res) => res.json())
       .then((res) => {
         setData(res.filter((country: Country) => country.independent === true));
